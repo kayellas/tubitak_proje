@@ -83,9 +83,7 @@
                     <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
-    
               </li>
-    
               <li class="nav-item">
                 <a href="pages/charts/chart.php" class="nav-link">
                   <i class="nav-icon fas fa-chart-pie"></i>
@@ -115,15 +113,33 @@
                 <ul class="nav nav-treeview">
                   </li>
                   <li class="nav-item">
-                    <a href="../pages/tables/data.php" class="nav-link">
+                    <a href="../kds/pages/tables/data.php" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
                       <p>DataTables</p>
-                    </a>
-                  </li>
-                </ul>
+                </a>
               </li>
+          </li>
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Lokasyon Bazlı Firma
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="/kds/pages/tables/data.php" class="nav-link active">
+                <a href="../map/map.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>MAP</p>
+
+                </a>
+              </li>
+            </ul>
+          </li>
+              <li class="nav-item">
+                <a href="../kds/pages/tables/data.php" class="nav-link active">
                   <i class="nav-icon fas fa-chart-pie"></i>
                   <p>
                     Ürün Ekle

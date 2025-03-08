@@ -14,7 +14,7 @@ const baglanti = mysql.createConnection({
     port: 3308 // Kullandığınız port numarası
 
 });
-
+    
 baglanti.connect(function(err) {
     if (err) {
         console.log("Bağlantı hatası var",err);

@@ -11,7 +11,7 @@ const baglanti = mysql.createConnection({
     user: 'root',
     password: '',
     database :'kds',
-    port: 3308 // Kullandığınız port numarası
+    port: 3306 // Kullandığınız port numarası
 
 });
 

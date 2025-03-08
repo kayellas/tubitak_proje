@@ -135,6 +135,25 @@
                   </li>
                 </ul>
               </li>
+
+              <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Lokasyon Bazlı Firma
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="../kds/pages/map/map.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>MAP</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
               <li class="nav-item">
                 <a href="urunekle.html" class="nav-link active">
                   <i class="nav-icon fas fa-chart-pie"></i>

@@ -157,7 +157,6 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              </li>
               <li class="nav-item">
                 <a href="pages/tables/data.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -166,6 +165,27 @@
               </li>
             </ul>
           </li>
+
+
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Lokasyon Bazlı Firma
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="pages/map/map.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>MAP</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+
             <li class="nav-item">
             <a href="../kds/urunekle.html" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -604,7 +624,7 @@
     </section>
     <!-- /.content -->
 <footer class="main-footer">
-    <strong>PROF. DR. VAHAP TECİM - KDS PROJESİ İÇİN YAPILMIŞTIR. (ZEYNEP KAYA) &copy; 2023-2024</strong>
+    <strong>FATIMA ZEYNEP KAYA &copy; 2023-2024</strong>
 </footer>
   </div>
   <!-- /.content-wrapper -->
