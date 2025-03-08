@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harita ve Veri Tablosu</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .top-container {
+            display: flex;
+            width: 100%;
+            height: 50%;
+        }
+
+        #map {
+            width: 50%;
+            height: 100%;
+        }
+
+        #data-container {
+            width: 50%;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f4f4f4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        .data-row:hover {
+            background-color: #e0e0e0;
+        }
+
+        .bottom-container {
+            display: flex;
+            width: 100%;
+            height: 50%;
+        }
+
+        .bottom-container div {
+            flex: 1;
+            border: 1px solid #ddd;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-container">
+        <div id="map"></div>
+        <div id="data-container">
+            <h3>Konumlar</h3>
+            <table id="location-table">
+                <thead>
+                    <tr>
+                        <th>Firma Adı</th>
+                        <th>Adres</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Tablo verileri buraya eklenecek -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bottom-container">
+        <div></div>
+        <div></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Harita oluşturuluyor
+        var map = L.map('map').setView([39.92077, 32.85411], 6); // Başlangıç konumu: Türkiye
+
+        // OpenStreetMap katmanını ekle
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // PHP’den JSON verilerini çekme
+        fetch('map.php')
+            .then(response => response.json())
+            .then(data => {
+                // Tabloyu doldur
+                var tableBody = document.getElementById('table-body');
+                
+                // Şehirler için renkler atanacak
+                var cityColors = {};
+                var cityFirmCount = {}; // Şehirdeki firma sayısını takip etmek için
+
+                data.forEach(function(marker) {
+                    // Şehre özel renk oluşturmak için şehir ismine göre renk belirliyoruz
+                    var city = marker.address; // Şehir adı
+                    if (!cityColors[city]) {
+                        // Eğer bu şehir için renk atanmadıysa, yeni bir renk oluştur
+                        cityColors[city] = getRandomColor();
+                        cityFirmCount[city] = 0; // Şehirdeki firma sayısını sıfırla
+                    }
+
+                    // Bu şehirdeki firmanın rengini farklı yapmak için firma sayısını arttırıyoruz
+                    var markerColor = adjustColorForCity(cityColors[city], cityFirmCount[city]);
+
+                    // Tabloya satır ekle
+                    var row = document.createElement('tr');
+                    row.classList.add('data-row');
+                    row.setAttribute('data-lat', marker.lat);
+                    row.setAttribute('data-lng', marker.lng);
+
+                    var cell1 = document.createElement('td');
+                    cell1.textContent = marker.name;
+                    row.appendChild(cell1);
+
+                    var cell2 = document.createElement('td');
+                    cell2.textContent = marker.address;
+                    row.appendChild(cell2);
+
+                    tableBody.appendChild(row);
+
+                    // Haritaya marker ekle
+                    var point = [marker.lat, marker.lng];
+                    var popupContent = `<strong>${marker.name}</strong><br>${marker.address}`;
+
+                    // Renkli işaretçi oluştur
+                    var icon = L.icon({
+                        iconUrl: `https://www.colorhexa.com/${markerColor.substring(1)}.png`, // Dinamik renk URL
+                        iconSize: [32, 32], // Boyut
+                        iconAnchor: [16, 32], // Anchor
+                        popupAnchor: [0, -32] // Popup yerleşimi
+                    });
+
+                    // Marker'ı haritaya ekle
+                    var mapMarker = L.marker(point, { icon: icon }).addTo(map).bindPopup(popupContent);
+
+                    // Satıra tıklanması durumunda haritada konumu göster
+                    row.addEventListener('click', function() {
+                        map.setView([marker.lat, marker.lng], 10);
+                        mapMarker.openPopup();
+                    });
+
+                    // Şehirdeki firma sayısını artır
+                    cityFirmCount[city]++;
+                });
+            })
+            .catch(error => console.error('Veri çekme hatası:', error));
+
+        // Rastgele bir renk oluşturma fonksiyonu
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Şehirdeki her firma için renkleri değiştiren fonksiyon
+        function adjustColorForCity(baseColor, firmIndex) {
+            // Temel rengin tonu değiştirilir
+            var color = baseColor;
+            var factor = firmIndex * 20; // Firma sırasına göre ton değişimi
+            color = lightenDarkenColor(color, factor); // Renk tonunu ayarlıyoruz
+            return color;
+        }
+
+        // Renk tonu değiştirme fonksiyonu
+        function lightenDarkenColor(col, amt) {
+            var usePound = false;
+            if (col[0] === "#") {
+                col = col.slice(1);
+                usePound = true;
+            }
+            var num = parseInt(col, 16);
+            var r = (num >> 16) + amt;
+            if (r > 255) r = 255;
+            else if (r < 0) r = 0;
+            var b = ((num >> 8) & 0x00FF) + amt;
+            if (b > 255) b = 255;
+            else if (b < 0) b = 0;
+            var g = (num & 0x0000FF) + amt;
+            if (g > 255) g = 255;
+            else if (g < 0) g = 0;
+            return (usePound ? "#" : "") + (0x1000000 + (r << 16) + (b << 8) + g).toString(16).slice(1).toUpperCase();
+        }
+    </script>
+</body>
+</html>
